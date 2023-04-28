@@ -108,7 +108,7 @@ class Enrollment(models.Model):
 class Question(models.Model):
     question_text = models.TextField()
     grade = models.IntegerField()
-    lesson_id = ForeignKey(Lesson, on_delete=models.CASCADE)
+    lesson_id = models.ForeignKey(Lesson, on_delete=models.CASCADE)
 
     # <HINT> A sample model method to calculate if learner get the score of the question
     #def is_get_score(self, selected_ids):
@@ -143,7 +143,7 @@ class Question(models.Model):
 class Choice(models.Model):
     choice_text = models.TextField()
     is_correct = models.BooleanField()
-    question_id = ForeignKey(Question, on_delete=models.CASCADE)
+    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
     #class Submission(models.Model):
 #    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
 #    chocies = models.ManyToManyField(Choice)
