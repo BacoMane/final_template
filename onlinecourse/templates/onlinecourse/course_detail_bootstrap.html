@@ -75,7 +75,7 @@
                                 {% for choice in question.choice_set.all %}
                                     <!--<div class="card-body">{{choice.choice_text}}</div>-->
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" disabled>
+                                        <input type="checkbox" class="form-check-input">
                                         <label class="form-check-label">{{choice.choice_text}}</label>
                                     </div>
                                 {% endfor %}
