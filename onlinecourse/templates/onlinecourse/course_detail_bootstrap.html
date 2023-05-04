@@ -62,6 +62,7 @@
                 </div>
 
             -->
+            {% if user.is_authenticated %}
             <div class="container">
                 <h2>You can take an exam now!</h2>
                 <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo">Exam</button>
@@ -71,31 +72,21 @@
                             {% for question in lesson.question_set.all %}
                             <div class="card mt-1">
                             <div class="card-header">{{question.question_text}}</div>
-                            <form>
-                                {% for choice in question.choice_set.all %}
-                                    <!--<div class="card-body">{{choice.choice_text}}</div>-->
-                                    <div class="form-check">
-                                        <input type="checkbox" class="form-check-input">
-                                        <label class="form-check-label">{{choice.choice_text}}</label>
-                                    </div>
-                                {% endfor %}
-                            </form>
+                                <form>
+                                    {% for choice in question.choice_set.all %}
+                                        <!--<div class="card-body">{{choice.choice_text}}</div>-->
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input">
+                                            <label class="form-check-label">{{choice.choice_text}}</label>
+                                        </div>
+                                    {% endfor %}
+                                </form>
                             </div>
                             {% endfor %}
                         {% endfor %}
-                        <h2>Question 1</h2>
-                        choices
-                    </div>
-                    <div id="demo2">
-                        <h2>Question 2</h2>
-                        choices
-                    </div>
-                    <div id="demo3">
-                        <h2>Question 3</h2>
-                        choices
-                    </div>
                 </div>
-              </div>
+            </div>
+            {% endif %}
             <!-- <HINT> If user is authenticated, show course exam with a list of question -->
 
             <!-- <HINT> Each example will have many questions -->
