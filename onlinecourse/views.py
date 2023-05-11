@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.db.models import Q
 # <HINT> Import any new Models here
 from .models import Course, Enrollment, Question, Choice, Submission
 from django.contrib.auth.models import User
@@ -113,11 +114,13 @@ def enroll(request, course_id):
 def submit(request, course_id):
     if request.method =='POST':
         #course = Course.objects.get(pk=course_id)
-        user_id = request.POST('username')
-        enrollment = Enrollment.objects.get(user=user_id, course=course_id))
-        submission = Submission.objects.Create(enrollment=enrollment.id)
+        user = request.user.id
+        #enrollment = Enrollment.objects.filter(Q(user=user) & Q(course=course_id)).values_list('pk', flat=True)[0]
+        enrollment = Enrollment.objects.filter(Q(user=user) & Q(course=course_id))[0]
+
         answers = extract_answers(request)
-        submission.choices = answers
+
+        submission = Submission(enrollment=enrollment, chocies = answers)
         submission.save()
         return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(submission.id,)))
 
