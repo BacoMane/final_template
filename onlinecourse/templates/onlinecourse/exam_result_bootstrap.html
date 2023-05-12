@@ -48,7 +48,7 @@
             <h4>Answers</h4>
             {{submission.choice_set.all}}
             {% for id in submission.chocies_set.all %}
-                <h5>The answer is: {{id}}</h5>
+                <h5>The answer is: {{id.choice_text}</h5>
             {% endfor %}
             <div id="demo1">
                 <form id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
