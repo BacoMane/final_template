@@ -1,7 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from . import views
+from . import views 
 
 app_name = 'onlinecourse' 
 urlpatterns = [
@@ -15,7 +15,7 @@ urlpatterns = [
     # ex: /onlinecourse/5/
     path('<int:pk>/', views.CourseDetailView.as_view(), name='course_details'),
     # ex: /enroll/5/
-    path('<int:course_id>/enroll/', views.enroll, name='enroll'),
+    path('<int:course_id>/enroll/enroll2', views.enroll, name='enroll/enroll2'),
 
     # <HINT> Create a route for submit view
     path('<int:course_id>/submit/', views.submit, name='submit'),

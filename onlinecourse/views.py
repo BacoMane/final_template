@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render 
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 # <HINT> Import any new Models here
@@ -124,7 +124,7 @@ def submit(request, course_id):
         for choice in answers:
             submission.chocies.add(choice)
         submission.save()
-        return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id, submission_id,)))
+        return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id, submission.id,)))
 
 # <HINT> A example method to collect the selected choices from the exam form from the request object
 def extract_answers(request):
@@ -133,7 +133,7 @@ def extract_answers(request):
         if key.startswith('choice'):
             value = request.POST[key]
             choice_id = int(value)
-            submitted_anwsers.append(choice_id)
+            submitted_anwsers.append(1)
     return submitted_anwsers
 
 # <HINT> Create an exam result view to check if learner passed exam and show their question results and result for each question,
@@ -147,13 +147,14 @@ def show_exam_result(request, course_id, submission_id):
     context = {}
     course = Course.objects.get(pk=course_id)
     submission = Submission.objects.get(pk=submission_id)
-    selected_choice_ids = submission.chocies
+    selected_choice_ids = submission.chocies.all()
     total_score = 0
-        #for id in selected_choice_ids:
-       # if Choice(id).is_correct:
-            #total_score += 1
+    for id in selected_choice_ids:
+        if Choice[id].is_correct:
+            total_score += 1
     context['course'] = course
-    context['selected_choice_ids'] = selected_choice_ids
+    context['submission'] = submission
+    #context['selected_choice_ids'] = selected_choice_ids
     context['total_score'] = total_score
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)

@@ -43,9 +43,34 @@
         {% else %}
         <div class="alert alert-danger">
             <!--HINT Display failed info -->
-            <h3>Total score</h3>
-            {{total_score}}
+            <h3>Total score for the attempt number {{submission.id}} for the course {{course.name}} is:</h3>
+            <h1>{{total_score}}</h1>
             <h4>Answers</h4>
+            {{submission.choice_set.all}}
+            {% for id in submission.chocies_set.all %}
+                <h5>The answer is: {{id}}</h5>
+            {% endfor %}
+            <div id="demo1">
+                <form id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
+
+                {% for lesson in course.lesson_set.all %}
+                    {% for question in lesson.question_set.all %}
+                        <div class="card mt-1">
+                            <div class="card-header">{{question.question_text}}</div>
+                                {% for choice in question.choice_set.all %}
+                                    <!--<div class="card-body">{{choice.choice_text}}</div>-->
+                                    {% csrf_token %}
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" value = "" checked disabled>
+                                        <label class="form-check-label">{{choice.choice_text}} {{submission.choice_set.all}}</label>
+                                    </div>
+                                {% endfor %}                        
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                </form>
+        </div>
             {{selected_choice_ids}}
         </div>
         <a class="btn btn-link text-danger" href="{% url 'onlinecourse:course_details' course.id %}">Re-test</a>
