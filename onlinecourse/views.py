@@ -118,19 +118,23 @@ def submit(request, course_id):
         #enrollment = Enrollment.objects.filter(Q(user=user) & Q(course=course_id)).values_list('pk', flat=True)[0]
         enrollment = Enrollment.objects.filter(Q(user=user) & Q(course=course_id))[0]
 
-        #answers = extract_answers(request)
-        answers = [1,3,2]
+        answers = extract_answers(request)
+        #extract_answers(request)
+        #answers = [1,3,2]
+
 
         submission = Submission(enrollment=enrollment)
         submission.save()
         for choice in answers:
             submission.chocies.add(choice)
-            print('The choice id is ')
-            print(choice)
+            #print('The choice id is ')
+            #print(choice)
         submission.save()
-        print('the submissioin record is:')
-        print(submission.id)
+        #print('the submissioin record is:')
+        #print(submission.id)
+        print("the choices extracted by func are")
         for choice in submission.chocies.all():
+            #print()
             print(choice)
         return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id, submission.id,)))
 
@@ -142,14 +146,19 @@ def extract_answers(request):
         print("hello for")
         if key.startswith('choice'):
             value = request.POST[key]
-            choice_id = int(value)
+            #value = int(key)
+            value = int(''.join(filter(str.isdigit, key)))
+            print(value)
+            #choice_id = int(value)
             print("hello")
-            submitted_anwsers.append(1)
+            submitted_anwsers.append(value)
     some_var = request.POST.getlist('choice[]')
     print(some_var)
     for element in some_var:
         print("hello")
-
+    print(request.POST)
+    print('the submitted ansswers ids')
+    print(submitted_anwsers)
     return submitted_anwsers
 
 # <HINT> Create an exam result view to check if learner passed exam and show their question results and result for each question,

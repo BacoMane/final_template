@@ -81,7 +81,7 @@
                                         {% csrf_token %}
 
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" name= 'choice[]'>
+                                            <input type="checkbox" class="form-check-input" id="7" name="choice{{ choice.id }}">
                                             <label class="form-check-label">{{choice.choice_text}}</label>
                                         </div>
                                     {% endfor %}
