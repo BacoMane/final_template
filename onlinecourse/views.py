@@ -1,4 +1,4 @@
-from django.shortcuts import render  
+from django.shortcuts import render   
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 # <HINT> Import any new Models here
@@ -161,6 +161,30 @@ def extract_answers(request):
     print(submitted_anwsers)
     return submitted_anwsers
 
+def question_exist(questions, the_question):
+    exist = False
+    for question in questions:
+        if the_question == question:
+            exist = True
+    return exist
+
+def number_of_correct_choices(question):
+    number = 0
+    choices = Choice.objects.filter(question_id=question)
+    for choice in choices:
+        if choice.is_correct:
+            number += 1
+    return number
+
+def choice_is_selected(choice, submission_id):
+    is_selected = False
+    submission = Submission.objects.get(pk=submission_id)
+    selected_choice_ids = submission.chocies.all()
+    for id in selected_choice_ids:
+        if id == choice:
+            is_selected = True
+    return is_selected
+
 # <HINT> Create an exam result view to check if learner passed exam and show their question results and result for each question,
 # you may implement it based on the following logic:
         # Get course and submission based on their ids
@@ -175,13 +199,45 @@ def show_exam_result(request, course_id, submission_id):
     selected_choice_ids = submission.chocies.all()
     total_score = 0
     print('im here')
+    questions = []
     for id in selected_choice_ids:
-        print(id.pk)
-        #int(''.join(filter(str.isdigit, id)))
-        #id = int(id)
         choice = Choice.objects.get(pk=id.pk)
-        if choice.is_correct:
-            total_score += 1
+        question = choice.question_id
+        if question_exist(questions, question.pk) == False:
+            print('question added:')
+            print(question)
+            print('to')
+            print(questions)
+            print('exist=')
+            print(question_exist(questions, question))
+            questions.append(question.id)
+    print('the questions of the exam:')
+    print(questions)
+    number_of_questions = len(questions)
+    print(number_of_questions)
+    for question in questions:
+        number_of_correct_answers = 0
+        print('number of correct answers')
+        print(number_of_correct_choices(question))
+        choices = Choice.objects.filter(question_id=question)
+        for choice in choices:
+            if choice_is_selected(choice, submission_id) and choice.is_correct:
+                number_of_correct_answers += 1
+        total_score += (number_of_correct_answers/number_of_correct_choices(question))
+        print('number of correct answers and then correct choices')
+        print(number_of_correct_answers)
+        print(number_of_correct_choices(question))
+    print('total score')
+    print(total_score)
+    total_score = int((total_score * 100)/number_of_questions)
+
+    #for id in selected_choice_ids:
+        #print(id.pk)
+        #int(''.join(filter(str.isdigit, id))) 
+        #id = int(id)
+        #choice = Choice.objects.get(pk=id.pk)
+        #if choice.is_correct:
+            #total_score += 1
     context['course'] = course
     context['submission'] = submission
     #context['selected_choice_ids'] = selected_choice_ids
