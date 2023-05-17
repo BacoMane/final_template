@@ -1,4 +1,4 @@
-from django.shortcuts import render   
+from django.shortcuts import render    
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 # <HINT> Import any new Models here
@@ -215,14 +215,20 @@ def show_exam_result(request, course_id, submission_id):
     print(questions)
     number_of_questions = len(questions)
     print(number_of_questions)
+    selected_correct_choices = []
+    correct_and_not_selected = []
     for question in questions:
         number_of_correct_answers = 0
         print('number of correct answers')
         print(number_of_correct_choices(question))
         choices = Choice.objects.filter(question_id=question)
         for choice in choices:
-            if choice_is_selected(choice, submission_id) and choice.is_correct:
-                number_of_correct_answers += 1
+            if choice.is_correct:
+                if choice_is_selected(choice, submission_id):              
+                    number_of_correct_answers += 1
+                    selected_correct_choices.append(choice.pk)
+                else: 
+                    correct_and_not_selected.append(choice.pk)
         total_score += (number_of_correct_answers/number_of_correct_choices(question))
         print('number of correct answers and then correct choices')
         print(number_of_correct_answers)
@@ -238,10 +244,19 @@ def show_exam_result(request, course_id, submission_id):
         #choice = Choice.objects.get(pk=id.pk)
         #if choice.is_correct:
             #total_score += 1
+    selected_choice_idss = []
+    for id in selected_choice_ids:
+        selected_choice_idss.append(id.pk)
+    print(selected_correct_choices)
+    print(selected_correct_choices.count(1))
+    print('selected_choice_idss')
+    print(selected_choice_idss)
     context['course'] = course
     context['submission'] = submission
-    #context['selected_choice_ids'] = selected_choice_ids
+    context['selected_choice_idss'] = selected_choice_idss
     context['total_score'] = total_score
+    context['selected_correct_choices'] = selected_correct_choices 
+    context['correct_and_not_selected'] = correct_and_not_selected
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
    

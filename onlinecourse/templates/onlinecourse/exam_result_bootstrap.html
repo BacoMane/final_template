@@ -39,12 +39,12 @@
     {% if total_score >= 75 %}
     <div class="alert alert-success">
        <!--HINT Display passed info -->
-       <h4><b>Congratulations, {{user.username}}!</b> You have passed the exam with score {{total_score}} / 100 </h4>          
+       <h5><b>Congratulations, {{user.username}}!</b> You have passed the exam with score {{total_score}} / 100 </h5>          
     </div>
     {% else %}
         <div class="alert alert-danger">
             <!--HINT Display failed info -->
-            <h3>Total score for the attempt number {{submission.id}} for the course {{course.name}} is:</h3>
+            <h5>Total score for the attempt number {{submission.id}} for the course {{course.name}} is:</h5>
             <h1>{{total_score}}</h1>
             <h4>Answers</h4>
             {{submission.choice_set.all}}
@@ -63,14 +63,23 @@
             {% for lesson in course.lesson_set.all %}
                 {% for question in lesson.question_set.all %}
                     <div class="card mt-1">
-                        <div class="card-header">{{question.question_text}}</div>
-                            {% for choice in question.choice_set.all %}
-                                <!--<div class="card-body">{{choice.choice_text}}</div>-->
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" value = "">
-                                    <label class="form-check-label">{{choice.choice_text}} {{submission.choice_set.all}}</label>
-                                </div>
-                            {% endfor %}                        
+                        <h5 class="card-header">{{question.question_text}}</h5>
+                        {% for choice in question.choice_set.all %} 
+                            <!--<div class="card-body">{{choice.choice_text}}</div>-->
+                            <div class="form-check">                                                               
+                                {% if choice.pk in selected_correct_choices %}  
+                                    <!--<input type="checkbox" class="form-check-input" value = "">
+                                    <label class="form-check-label">{{choice.choice_text}} {{submission.choice_set.all}}</label>-->
+                                    <h6 class="text-success">Correct answer: {{choice.choice_text}}</h6>
+                                {% elif choice.pk in selected_choice_idss %}
+                                    <h6 class="text-danger">Wrong answer: {{choice.choice_text}}</h6>
+                                {% elif choice.pk in correct_and_not_selected %}
+                                    <h6 class="text-warning">Not selected: {{choice.choice_text}}</h6>
+                                {% else %}
+                                    <h6 class="text-body">{{choice.choice_text}}</h6>
+                                {% endif %}  
+                            </div>
+                        {% endfor %}                       
                         </div>
                     </div>
                 {% endfor %}
