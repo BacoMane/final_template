@@ -40,14 +40,15 @@
     <div class="alert alert-success">
        <!--HINT Display passed info -->
        <h5><b>Congratulations, {{user.username}}!</b> You have passed the exam with score {{total_score}} / 100 </h5>          
-    </div>
+    </div> 
     {% else %}
         <div class="alert alert-danger">
             <!--HINT Display failed info -->
-            <h5>Total score for the attempt number {{submission.id}} for the course {{course.name}} is:</h5>
+            <h5><b>Failed</b> Sorry, {{user.username}}! You have failed exam with score {{total_score}} / 100 </h5> 
+            <!--<h5>Total score for the attempt number {{submission.id}} for the course {{course.name}} is:</h5>
             <h1>{{total_score}}</h1>
             <h4>Answers</h4>
-            {{submission.choice_set.all}}
+            {{submission.choice_set.all}}-->
             {% for id in submission.chocies_set.all %}
                 <h5>The answer is: {{id.choice_text}</h5>
             {% endfor %}

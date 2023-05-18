@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 # <HINT> Import any new Models here
-from .models import Course, Enrollment, Question, Choice, Submission
+from .models import Course, Enrollment, Question, Choice, Submission, Lesson
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -184,6 +184,17 @@ def choice_is_selected(choice, submission_id):
         if id == choice:
             is_selected = True
     return is_selected
+def get_quest_number(course_id):
+    list_of_questions = []
+    lessons = Lesson.objects.filter(course=course_id)
+    for lesson in lessons:
+        questions = Question.objects.filter(lesson_id=lesson.id)
+        for question in questions:
+            if question.id in list_of_questions:
+                None
+            else: 
+                list_of_questions.append(question.id)
+    return len(list_of_questions)
 
 # <HINT> Create an exam result view to check if learner passed exam and show their question results and result for each question,
 # you may implement it based on the following logic:
@@ -196,6 +207,7 @@ def show_exam_result(request, course_id, submission_id):
     context = {}
     course = Course.objects.get(pk=course_id)
     submission = Submission.objects.get(pk=submission_id)
+    number_of_questionsss = get_quest_number(course_id)
     selected_choice_ids = submission.chocies.all()
     total_score = 0
     print('im here')
@@ -235,7 +247,7 @@ def show_exam_result(request, course_id, submission_id):
         print(number_of_correct_choices(question))
     print('total score')
     print(total_score)
-    total_score = int((total_score * 100)/number_of_questions)
+    total_score = int((total_score * 100)/number_of_questionsss)
 
     #for id in selected_choice_ids:
         #print(id.pk)
@@ -251,6 +263,8 @@ def show_exam_result(request, course_id, submission_id):
     print(selected_correct_choices.count(1))
     print('selected_choice_idss')
     print(selected_choice_idss)
+    print('number of questionsss')
+    print(number_of_questionsss)
     context['course'] = course
     context['submission'] = submission
     context['selected_choice_idss'] = selected_choice_idss
