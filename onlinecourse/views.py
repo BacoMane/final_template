@@ -229,8 +229,10 @@ def show_exam_result(request, course_id, submission_id):
     print(number_of_questions)
     selected_correct_choices = []
     correct_and_not_selected = []
+    questions_total_score = 0
     for question in questions:
         number_of_correct_answers = 0
+        question_score = 0
         print('number of correct answers')
         print(number_of_correct_choices(question))
         choices = Choice.objects.filter(question_id=question)
@@ -238,9 +240,19 @@ def show_exam_result(request, course_id, submission_id):
             if choice.is_correct:
                 if choice_is_selected(choice, submission_id):              
                     number_of_correct_answers += 1
+                    question_score += 1
                     selected_correct_choices.append(choice.pk)
                 else: 
                     correct_and_not_selected.append(choice.pk)
+            if not choice.is_correct:
+                if choice_is_selected(choice, submission_id):              
+                    number_of_correct_answers -= 1
+                    question_score -= 1
+        if question_score < 0:
+            question_score = 0
+        if number_of_correct_answers < 0:
+            number_of_correct_answers = 0
+        questions_total_score += question_score
         total_score += (number_of_correct_answers/number_of_correct_choices(question))
         print('number of correct answers and then correct choices')
         print(number_of_correct_answers)

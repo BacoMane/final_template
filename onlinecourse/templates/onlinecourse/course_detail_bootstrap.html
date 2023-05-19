@@ -64,8 +64,9 @@
             -->
             {% if user.is_authenticated %}
             <!--<div class="container">-->
-                <h2>You can take an exam now!</h2>
-                <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo">Exam</button>
+                <!--<h2>You can take an exam now!</h2>
+                <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#demo">Exam</button>-->
+                <input class="btn btn-primary btn-block" type="button" value="Start exam" data-toggle="collapse" data-target="#demo">
                 <div id="demo" class="collapse">
                     <div id="demo1">
                         <form id="questionform" action="{% url 'onlinecourse:submit' course.id %}" method="post">
